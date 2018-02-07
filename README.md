@@ -82,9 +82,12 @@ A few things to consider while you're performing the syntax-directed translation
 * In order to generate a working C/C++ program, you'll need a variable declaration for each variable used in the program.  To do this, you can maintain a simple symbol table, where each variable identifier is stored when it's first encountered.  When your parse is finished, you can simply iterate through the identifiers stored in the symbol table and, for each identifier, generate a variable declaration at the top of your `main()` function.
 
     There are a couple simplifying assumptions you can make for the purposes of this assignment to make this a little easier:
-      * Every variable will appear as the left-hand side of an assignment statement before it is used anywhere else.
-      * All variables can be scoped to the `main()` function.  You don't need to worry about scoping variables within blocks (e.g. inside of an `if` block).
-      * All variables can have the same type, e.g. `double` or `float`.
+
+    * Every variable will appear as the left-hand side of an assignment statement before it is used anywhere else.
+
+    * All variables can be scoped to the `main()` function.  You don't need to worry about scoping variables within blocks (e.g. inside of an `if` block).
+
+    * All variables can have the same type, e.g. `double` or `float`.
 
 * So you can tell what's happening with your translated code, you should also generate one `printf()`/`cout` statement at the end of your `main()` function for each variable to print the value of that variable at the end of the execution of the translated program.
 
