@@ -39,7 +39,7 @@ The grammar you write will need to recognize a simplified subset of Python.  In 
     ```python
     circumference = pi * 2 * r
     ```
-    In the subset of Python we'll implement, every assignment statement will be constrained to a single line of code, and it will be terminated by a newline.  The expression on the right-hand side of the assignment can be any valid expression involving identifiers, floats, integers, or booleans and the following operators: `+`, `-`, `*`, `/`, `==`, `!=`, `>`, `>=`, `<`, `<=`, `not`.
+    In the subset of Python we'll implement, every assignment statement will be constrained to a single line of code, and it will be terminated by a newline.  The expression on the right-hand side of the assignment can be any valid expression involving identifiers, floats, integers, or booleans and the following operators: `+`, `-`, `*`, `/`, `==`, `!=`, `>`, `>=`, `<`, `<=`, `not`.  Expressions may also contain parentheses `()`.
 
 * **If-elif-else statements.**  In Python these look like the following:
     ```python
