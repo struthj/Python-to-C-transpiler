@@ -6,23 +6,33 @@
  * Since we're only parsing 1 file, we don't need to have yywrap() (plus,
  * having it included messes up compilation).
  */
-%option noyywrap
 
-%option yylineno
 
 %{
 #include <iostream>
 #include <stack>
 #include <cstdlib>
+#include "parser-push.hpp"
+YYSTYPE yylval;
+YYLTYPE yylloc;
 
-/*
- * We'll use this stack to keep track of indentation level, as described in
- * the Python docs:
- *
- * https://docs.python.org/3/reference/lexical_analysis.html#indentation
- */
+yypstate* pstate = yypstate_new();
+
+#define PUSH_TOKEN(token) do {  \
+  int s = yypush_parse(pstate, token, &yylval, &yylloc);  \
+  if (s != YYPUSH_MORE) {                                 \
+    yypstate_delete(pstate);                              \
+    return s;                                             \
+  }                                                       \
+} while(0)
+
+
 std::stack<int> _indent_stack;
 %}
+
+%option noyywrap
+
+%option yylineno
 
 %%
 
@@ -101,7 +111,9 @@ std::stack<int> _indent_stack;
             }
 
 \r?\n       {
-              std::cout << "NEWLINE" << std::endl;
+               yylval.str = new std::string(yytext, yyleng);
+                PUSH_TOKEN(NEWLINE); 
+                std::cout << "NEWLINE" << std::endl;
             }
 
 <<EOF>>     {
@@ -113,7 +125,11 @@ std::stack<int> _indent_stack;
                 _indent_stack.pop();
                 std::cout << "DEDENT" << std::endl;
               }
-              yyterminate();
+
+              int s = yypush_parse(pstate, 0, NULL, NULL);
+                yypstate_delete(pstate);
+                return s;
+              //yyterminate();
             }
 
 [ \t]       { /* Ignore spaces that haven't been handled above. */ }
@@ -134,22 +150,37 @@ std::stack<int> _indent_stack;
 "False"     { std::cout << "BOOLEAN\t\t" << false << std::endl; }
 
 [a-zA-Z_][a-zA-Z0-9_]*  {
-                          std::cout << "IDENTIFIER\t" << yytext << std::endl;
-                        }
+                yylval.str = new std::string(yytext, yyleng);
+                PUSH_TOKEN(IDENTIFIER);
+                std::cout << "IDENTIFIER\t\t" << yytext << std::endl; 
+              }
 
--?[0-9]*"."[0-9]+       {
-                          std::cout << "FLOAT\t\t" << atof(yytext) << std::endl;
-                        }
+-?[0-9]*"."[0-9]+        {
+                     yylval.value = atof(yytext);
+                     PUSH_TOKEN(FLOAT);
+                     std::cout << "FLOAT\t\t" << atof(yytext) << std::endl; 
+                   }
 
 -?[0-9]+    {
-              std::cout << "INTEGER\t\t" << atoi(yytext) << std::endl;
-            }
+                     yylval.value = atoi(yytext);
+                     PUSH_TOKEN(INTEGER);
+                     std::cout << "INTEGER\t\t" << atoi(yytext) << std::endl; 
+                   }
 
-"="         { std::cout << "ASSIGN\t\t" << yytext << std::endl; }
-"+"         { std::cout << "PLUS\t\t" << yytext << std::endl; }
-"-"         { std::cout << "MINUS\t\t" << yytext << std::endl; }
-"*"         { std::cout << "TIMES\t\t" << yytext << std::endl; }
-"/"         { std::cout << "DIVIDEDBY\t" << yytext << std::endl; }
+"="         { PUSH_TOKEN((yylval.token = EQUALS));
+            std::cout << "ASSIGN\t\t" << yytext << std::endl;  } 
+
+"+"         { PUSH_TOKEN((yylval.token = PLUS)); 
+            std::cout << "PLUS\t\t" << yytext << std::endl;}
+
+"-"         {  PUSH_TOKEN((yylval.token = MINUS));
+            std::cout << "MINUS\t\t" << yytext << std::endl; }
+
+"*"         {  PUSH_TOKEN((yylval.token = TIMES));
+            std::cout << "TIMES\t\t" << yytext << std::endl; }
+
+"/"         { PUSH_TOKEN((yylval.token = DIVIDEDBY));
+            std::cout << "DIVIDEDBY\t" << yytext << std::endl; }
 
 "=="        { std::cout << "EQ\t\t" << yytext << std::endl; }
 "!="        { std::cout << "NEQ\t\t" << yytext << std::endl; }

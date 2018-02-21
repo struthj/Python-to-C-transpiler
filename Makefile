@@ -1,10 +1,14 @@
-all: scan
+all: parser-push
 
-scan: main.cpp scanner.cpp
-	g++ main.cpp scanner.cpp -o scan
+parser-push.cpp parser-push.hpp: parser.y
+	bison -d -o parser-push.cpp parser.y
 
-scanner.cpp: scanner.l
-	flex -o scanner.cpp scanner.l
+scanner-push.cpp: scanner.l
+	flex -o scanner-push.cpp scanner.l
+
+parser-push: main.cpp parser-push.cpp scanner-push.cpp
+	g++ main.cpp parser-push.cpp scanner-push.cpp -o parser-push
+
 
 clean:
-	rm -f scan scanner.cpp
+	rm -f parser.cpp parser-push scanner-push.cpp parser-push.cpp
