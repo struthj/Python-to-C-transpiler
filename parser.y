@@ -34,6 +34,7 @@ extern int yylex();
 
 %type <value> expression
 %type <value> conditional conditionalExpr ifelse
+%type <value> flowcontrol
 
 %left PLUS MINUS
 %left TIMES DIVIDEDBY
@@ -54,6 +55,7 @@ statement
   : conditional NEWLINE 
   | DEDENT conditional NEWLINE
   | INDENT statement
+  | INDENT flowcontrol NEWLINE
   | DEDENT
   | IDENTIFIER EQUALS expression NEWLINE { symbols[*$1] = $3; delete $1; }
   ; 
@@ -80,16 +82,23 @@ conditionalExpr
   | IDENTIFIER { $$ = symbols[*$1]; delete $1; }
   | INTEGER { $$ = $1; }
   | FLOAT { $$ = $1; }
+  | BOOLEAN { $$ = $1; }
   ;
 
 conditional
   : ifelse conditionalExpr COLON { $$ = $2;}
   | ifelse COLON {}
+  | WHILE conditionalExpr COLON {}
   ;
 
 ifelse
   : IF {}
   | ELSE {}
+  ;
+
+flowcontrol
+  : BREAK {}
+  | RETURN { }
   ;
 
 %%
