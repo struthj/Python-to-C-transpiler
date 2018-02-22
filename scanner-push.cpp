@@ -1010,6 +1010,7 @@ YY_RULE_SETUP
                  */
                 std::cout << "INDENT" << std::endl;
                 _indent_stack.push(yyleng);
+                PUSH_TOKEN((yylval.token = INDENT));
               } else {
                 /*
                  * If the current indentation level is less than or equal to
@@ -1020,6 +1021,7 @@ YY_RULE_SETUP
                 while (!_indent_stack.empty() && _indent_stack.top() != yyleng) {
                   _indent_stack.pop();
                   std::cout << "DEDENT" << std::endl;
+                  PUSH_TOKEN((yylval.token = DEDENT));
                 }
 
                 /*
@@ -1037,7 +1039,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 99 "scanner.l"
+#line 101 "scanner.l"
 {
               /*
                * If we find a line that's not indented, pop all indentation
@@ -1048,6 +1050,7 @@ YY_RULE_SETUP
               while(_indent_stack.top() != 0) {
                 _indent_stack.pop();
                 std::cout << "DEDENT" << std::endl;
+                PUSH_TOKEN((yylval.token = DEDENT));
               }
               REJECT;
             }
@@ -1055,15 +1058,14 @@ YY_RULE_SETUP
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 113 "scanner.l"
+#line 116 "scanner.l"
 {
-               yylval.str = new std::string(yytext, yyleng);
-                PUSH_TOKEN(NEWLINE); 
+                PUSH_TOKEN(yylval.token = NEWLINE); 
                 std::cout << "NEWLINE" << std::endl;
             }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 119 "scanner.l"
+#line 121 "scanner.l"
 {
               /*
                * If we reach the end of the file, pop all indentation levels
@@ -1072,6 +1074,7 @@ case YY_STATE_EOF(INITIAL):
               while(_indent_stack.top() != 0) {
                 _indent_stack.pop();
                 std::cout << "DEDENT" << std::endl;
+                PUSH_TOKEN((yylval.token = DEDENT));
               }
 
               int s = yypush_parse(pstate, 0, NULL, NULL);
@@ -1082,77 +1085,94 @@ case YY_STATE_EOF(INITIAL):
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 135 "scanner.l"
+#line 138 "scanner.l"
 { /* Ignore spaces that haven't been handled above. */ }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 137 "scanner.l"
-{ std::cout << "AND\t\t" << yytext << std::endl; }
+#line 140 "scanner.l"
+{  PUSH_TOKEN((yylval.token = AND));
+            std::cout << "AND\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 138 "scanner.l"
-{ std::cout << "BREAK\t\t" << yytext << std::endl; }
+#line 143 "scanner.l"
+{ PUSH_TOKEN((yylval.token = BREAK));
+              std::cout << "BREAK\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 139 "scanner.l"
-{ std::cout << "DEF\t\t" << yytext << std::endl; }
+#line 146 "scanner.l"
+{ PUSH_TOKEN((yylval.token = DEF));
+              std::cout << "DEF\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 140 "scanner.l"
-{ std::cout << "ELIF\t\t" << yytext << std::endl; }
+#line 149 "scanner.l"
+{ PUSH_TOKEN((yylval.token = ELIF));
+              std::cout << "ELIF\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 141 "scanner.l"
-{ std::cout << "ELSE\t\t" << yytext << std::endl; }
+#line 152 "scanner.l"
+{ PUSH_TOKEN((yylval.token = ELSE));
+              std::cout << "ELSE\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 142 "scanner.l"
-{ std::cout << "FOR\t\t" << yytext << std::endl; }
+#line 155 "scanner.l"
+{ PUSH_TOKEN((yylval.token = FOR));
+              std::cout << "FOR\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 143 "scanner.l"
-{ std::cout << "IF\t\t" << yytext << std::endl; }
+#line 158 "scanner.l"
+{ PUSH_TOKEN((yylval.token = IF));
+              std::cout << "IF\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 144 "scanner.l"
-{ std::cout << "NOT\t\t" << yytext << std::endl; }
+#line 161 "scanner.l"
+{ PUSH_TOKEN((yylval.token = NOT));
+              std::cout << "NOT\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 145 "scanner.l"
-{ std::cout << "OR\t\t" << yytext << std::endl; }
+#line 164 "scanner.l"
+{ PUSH_TOKEN((yylval.token = OR));
+              std::cout << "OR\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 146 "scanner.l"
-{ std::cout << "RETURN\t\t" << yytext << std::endl; }
+#line 167 "scanner.l"
+{ PUSH_TOKEN((yylval.token = RETURN));
+              std::cout << "RETURN\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 147 "scanner.l"
-{ std::cout << "WHILE\t\t" << yytext << std::endl; }
+#line 170 "scanner.l"
+{ PUSH_TOKEN((yylval.token = WHILE));
+              std::cout << "WHILE\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 149 "scanner.l"
-{ std::cout << "BOOLEAN\t\t" << true << std::endl; }
+#line 173 "scanner.l"
+{ 
+              yylval.value = 1;
+              PUSH_TOKEN(BOOLEAN);
+              std::cout << "BOOLEAN\t\t" << true << std::endl; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 150 "scanner.l"
-{ std::cout << "BOOLEAN\t\t" << false << std::endl; }
+#line 178 "scanner.l"
+{ 
+              yylval.value = 0;
+              PUSH_TOKEN(BOOLEAN);
+              std::cout << "BOOLEAN\t\t" << false << std::endl; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 152 "scanner.l"
+#line 183 "scanner.l"
 {
                 yylval.str = new std::string(yytext, yyleng);
                 PUSH_TOKEN(IDENTIFIER);
@@ -1161,7 +1181,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 158 "scanner.l"
+#line 189 "scanner.l"
 {
                      yylval.value = atof(yytext);
                      PUSH_TOKEN(FLOAT);
@@ -1170,7 +1190,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 164 "scanner.l"
+#line 195 "scanner.l"
 {
                      yylval.value = atoi(yytext);
                      PUSH_TOKEN(INTEGER);
@@ -1179,87 +1199,97 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 170 "scanner.l"
+#line 201 "scanner.l"
 { PUSH_TOKEN((yylval.token = EQUALS));
             std::cout << "ASSIGN\t\t" << yytext << std::endl;  } 
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 173 "scanner.l"
+#line 204 "scanner.l"
 { PUSH_TOKEN((yylval.token = PLUS)); 
             std::cout << "PLUS\t\t" << yytext << std::endl;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 176 "scanner.l"
+#line 207 "scanner.l"
 {  PUSH_TOKEN((yylval.token = MINUS));
             std::cout << "MINUS\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 179 "scanner.l"
+#line 210 "scanner.l"
 {  PUSH_TOKEN((yylval.token = TIMES));
             std::cout << "TIMES\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 182 "scanner.l"
+#line 213 "scanner.l"
 { PUSH_TOKEN((yylval.token = DIVIDEDBY));
             std::cout << "DIVIDEDBY\t" << yytext << std::endl; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 185 "scanner.l"
-{ std::cout << "EQ\t\t" << yytext << std::endl; }
+#line 216 "scanner.l"
+{ PUSH_TOKEN((yylval.token = EQ));
+            std::cout << "EQ\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 186 "scanner.l"
-{ std::cout << "NEQ\t\t" << yytext << std::endl; }
+#line 219 "scanner.l"
+{ PUSH_TOKEN((yylval.token = NEQ));
+            std::cout << "NEQ\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 187 "scanner.l"
-{ std::cout << "GT\t\t" << yytext << std::endl; }
+#line 222 "scanner.l"
+{ PUSH_TOKEN((yylval.token = GT));
+            std::cout << "GT\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 188 "scanner.l"
-{ std::cout << "GTE\t\t" << yytext << std::endl; }
+#line 225 "scanner.l"
+{ PUSH_TOKEN((yylval.token = GTE));
+            std::cout << "GTE\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 189 "scanner.l"
-{ std::cout << "LT\t\t" << yytext << std::endl; }
+#line 228 "scanner.l"
+{ PUSH_TOKEN((yylval.token = LT));
+            std::cout << "LT\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 190 "scanner.l"
-{ std::cout << "LTE\t\t" << yytext << std::endl; }
+#line 231 "scanner.l"
+{ PUSH_TOKEN((yylval.token = LTE));
+            std::cout << "LTE\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 192 "scanner.l"
-{ std::cout << "LPAREN\t\t" << yytext << std::endl; }
+#line 234 "scanner.l"
+{ PUSH_TOKEN((yylval.token = LPAREN));
+            std::cout << "LPAREN\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 193 "scanner.l"
-{ std::cout << "RPAREN\t\t" << yytext << std::endl; }
+#line 237 "scanner.l"
+{ PUSH_TOKEN((yylval.token = RPAREN));
+            std::cout << "RPAREN\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 195 "scanner.l"
-{ std::cout << "COMMA\t\t" << yytext << std::endl; }
+#line 240 "scanner.l"
+{  PUSH_TOKEN((yylval.token = COMMA));
+            std::cout << "COMMA\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 196 "scanner.l"
-{ std::cout << "COLON\t\t" << yytext << std::endl; }
+#line 243 "scanner.l"
+{  PUSH_TOKEN((yylval.token = COLON));
+              std::cout << "COLON\t\t" << yytext << std::endl; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 198 "scanner.l"
+#line 246 "scanner.l"
 {
               std::cerr << "Unrecognized token on line " << yylineno << ": "
                 << yytext << std::endl;
@@ -1268,10 +1298,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 204 "scanner.l"
+#line 252 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1275 "scanner-push.cpp"
+#line 1305 "scanner-push.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2251,7 +2281,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 204 "scanner.l"
+#line 252 "scanner.l"
 
 
 

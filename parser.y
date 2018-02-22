@@ -23,13 +23,17 @@ extern int yylex();
 %define api.pure full
 %define api.push-pull push
 
-%token <str> IDENTIFIER NEWLINE
+%token <str> IDENTIFIER
 %token <value> FLOAT
-%token <value> INTEGER
-%token <token> EQUALS PLUS MINUS TIMES DIVIDEDBY
-%token <token> SEMICOLON LPAREN RPAREN
+%token <value> INTEGER BOOLEAN
+%token <token> EQUALS PLUS MINUS TIMES DIVIDEDBY NEWLINE 
+%token <token> EQ NEQ GT GTE LT LTE 
+%token <token> INDENT DEDENT
+%token <token> AND BREAK DEF ELIF ELSE FOR IF NOT OR RETURN WHILE
+%token <token> SEMICOLON LPAREN RPAREN COLON COMMA
 
 %type <value> expression
+%type <value> conditional conditionalExpr ifelse
 
 %left PLUS MINUS
 %left TIMES DIVIDEDBY
@@ -47,8 +51,12 @@ program
   ;
 
 statement
-  : IDENTIFIER EQUALS expression NEWLINE { symbols[*$1] = $3; delete $1; }
-  ;
+  : conditional NEWLINE 
+  | DEDENT conditional NEWLINE
+  | INDENT statement
+  | DEDENT
+  | IDENTIFIER EQUALS expression NEWLINE { symbols[*$1] = $3; delete $1; }
+  ; 
 
 expression
   : LPAREN expression RPAREN { $$ = $2;  }
@@ -58,7 +66,30 @@ expression
   | expression DIVIDEDBY expression { $$ = $1 / $3; }
   | INTEGER { $$ = $1; }
   | FLOAT { $$ = $1; }
+  | BOOLEAN { $$ = $1; }
   | IDENTIFIER { $$ = symbols[*$1]; delete $1; }
+  ;
+
+conditionalExpr
+  : conditionalExpr LT conditionalExpr { $$ = $1 < $3; }
+  | conditionalExpr GT conditionalExpr { $$ = $1 > $3; }
+  | conditionalExpr LTE conditionalExpr { $$ = $1 <= $3; }
+  | conditionalExpr GTE conditionalExpr { $$ = $1 >= $3; }
+  | conditionalExpr NEQ conditionalExpr { $$ = $1 != $3; }
+  | conditionalExpr EQ conditionalExpr { $$ = $1 == $3; }
+  | IDENTIFIER { $$ = symbols[*$1]; delete $1; }
+  | INTEGER { $$ = $1; }
+  | FLOAT { $$ = $1; }
+  ;
+
+conditional
+  : ifelse conditionalExpr COLON { $$ = $2;}
+  | ifelse COLON {}
+  ;
+
+ifelse
+  : IF {}
+  | ELSE {}
   ;
 
 %%

@@ -46,17 +46,39 @@ extern int yydebug;
   enum yytokentype
   {
     IDENTIFIER = 258,
-    NEWLINE = 259,
-    FLOAT = 260,
-    INTEGER = 261,
+    FLOAT = 259,
+    INTEGER = 260,
+    BOOLEAN = 261,
     EQUALS = 262,
     PLUS = 263,
     MINUS = 264,
     TIMES = 265,
     DIVIDEDBY = 266,
-    SEMICOLON = 267,
-    LPAREN = 268,
-    RPAREN = 269
+    NEWLINE = 267,
+    EQ = 268,
+    NEQ = 269,
+    GT = 270,
+    GTE = 271,
+    LT = 272,
+    LTE = 273,
+    INDENT = 274,
+    DEDENT = 275,
+    AND = 276,
+    BREAK = 277,
+    DEF = 278,
+    ELIF = 279,
+    ELSE = 280,
+    FOR = 281,
+    IF = 282,
+    NOT = 283,
+    OR = 284,
+    RETURN = 285,
+    WHILE = 286,
+    SEMICOLON = 287,
+    LPAREN = 288,
+    RPAREN = 289,
+    COLON = 290,
+    COMMA = 291
   };
 #endif
 
@@ -71,7 +93,7 @@ union YYSTYPE
   std::string* str;
   int token;
 
-#line 75 "parser-push.hpp" /* yacc.c:1909  */
+#line 97 "parser-push.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
