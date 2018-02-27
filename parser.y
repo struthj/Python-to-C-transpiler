@@ -68,7 +68,7 @@ statement
   | DEDENT conditional statement DEDENT DEDENT { $$ = new std::string("} " + *$2 + "\n" + *$3 + "}\n}\n"); delete $2; delete $3;}
   | DEDENT { $$ = new std::string("}"); }
   | INDENT statement {$$ = new std::string(*$2); delete $2; }
-  | INDENT statement INDENT statement { std::cerr << "Error:"<< "Indentation error"<< std::endl; delete $2; delete $4; }
+  | INDENT statement INDENT statement { std::cerr << "Error:"<< "Indentation error"<< std::endl; exit(1); delete $2; delete $4; }
   | INDENT flowcontrol NEWLINE DEDENT DEDENT { $$ = new std::string(*$2 + "; \n}\n}\n"); delete $2; }
   | IDENTIFIER EQUALS expression NEWLINE { $$ = new std::string(*$1 +" = "+ *$3 + "; \n");
                                           characters.push_back(*$1);
