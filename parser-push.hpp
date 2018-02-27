@@ -46,38 +46,38 @@ extern int yydebug;
   enum yytokentype
   {
     IDENTIFIER = 258,
-    FLOAT = 259,
-    INTEGER = 260,
-    BOOLEAN = 261,
+    INTEGER = 259,
+    BOOLEAN = 260,
+    FLOAT = 261,
     EQUALS = 262,
     PLUS = 263,
     MINUS = 264,
     TIMES = 265,
     DIVIDEDBY = 266,
-    NEWLINE = 267,
-    EQ = 268,
-    NEQ = 269,
-    GT = 270,
-    GTE = 271,
-    LT = 272,
-    LTE = 273,
+    EQ = 267,
+    NEQ = 268,
+    GT = 269,
+    GTE = 270,
+    LT = 271,
+    LTE = 272,
+    RETURN = 273,
     INDENT = 274,
     DEDENT = 275,
-    AND = 276,
-    BREAK = 277,
-    DEF = 278,
-    ELIF = 279,
-    ELSE = 280,
-    FOR = 281,
-    IF = 282,
-    NOT = 283,
-    OR = 284,
-    RETURN = 285,
-    WHILE = 286,
-    SEMICOLON = 287,
-    LPAREN = 288,
-    RPAREN = 289,
-    COLON = 290,
+    NEWLINE = 276,
+    IF = 277,
+    COLON = 278,
+    AND = 279,
+    BREAK = 280,
+    DEF = 281,
+    ELIF = 282,
+    ELSE = 283,
+    FOR = 284,
+    NOT = 285,
+    OR = 286,
+    WHILE = 287,
+    SEMICOLON = 288,
+    LPAREN = 289,
+    RPAREN = 290,
     COMMA = 291
   };
 #endif
@@ -87,7 +87,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 13 "parser.y" /* yacc.c:1909  */
+#line 18 "parser.y" /* yacc.c:1909  */
 
   float value;
   std::string* str;
